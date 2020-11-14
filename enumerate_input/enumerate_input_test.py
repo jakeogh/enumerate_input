@@ -37,11 +37,9 @@ from enumerate_input import enumerate_input
 @click.option('--simulate', is_flag=True)
 @click.option('--count', type=str)
 @click.option("--printn", is_flag=True)
-#@click.option('--ipython', is_flag=True)
 def cli(args,
         verbose,
         debug,
-        ipython,
         simulate,
         count,
         printn,):
@@ -51,7 +49,7 @@ def cli(args,
     if verbose:
         ic(sys.stdout.isatty())
 
-    if not paths:
+    if not args:
         ic('waiting for input')
 
     for index, path in enumerate_input(iterator=args,
