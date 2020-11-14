@@ -2,28 +2,39 @@
 
 import sys
 import time
+import select
 import secrets
-from kcl.printops import eprint
-from kcl.byteops import read_by_byte
-from itertools import zip_longest
 from icecream import ic
 
 
-def true_items_in_iterator(iterator, verbose=False):
-    if verbose:
-        ic(iterator)
-    answer = sum(x for x in iterator if x is True)
-    return answer
+def eprint(*args, **kwargs):
+    if 'file' in kwargs.keys():
+        kwargs.pop('file')
+    print(*args, file=sys.stderr, **kwargs)
 
 
-# https://docs.python.org/3/library/itertools.html#itertools-recipes
-def grouper(iterable, n, fillvalue=None):
-    args = [iter(iterable)] * n
-    return zip_longest(*args, fillvalue=fillvalue)
+def read_by_byte(file_object, byte):    # by ikanobori
+    buf = b""
+    for chunk in iter(lambda: file_object.read(4096), b""):
+        #ic(len(chunk))
+        buf += chunk
+        sep = buf.find(byte)
+        #ic(sep, len(buf))
 
+        while sep != -1:
+            #sep_end_marker = len(buf) - 1
+            #ic(sep_end_marker)
+            #if sep == sep_end_marker:
+            #    ic(sep, "return")
+            #    return
 
-def compact(items):
-    return [item for item in items if item]
+            ret, buf = buf[:sep], buf[sep + 1:]
+            yield ret
+            sep = buf.find(byte)
+            #ic("after", sep)
+
+    #ic("fell off end")
+    # Decide what you want to do with leftover
 
 
 def append_to_set(*,
@@ -49,7 +60,9 @@ def append_to_set(*,
                 pass
 
         if time_loops > 1:
-            eprint("\nWarning: min_pool_size: {} was not reached in max_wait_time: {}s so actual wait time was: {}x {}s\n".format(min_pool_size, max_wait_time, time_loops, max_wait_time * time_loops))
+            msg = "\nWarning: min_pool_size: {} was not reached in max_wait_time: {}s so actual wait time was: {}x {}s\n"
+            msg = msg.format(min_pool_size, max_wait_time, time_loops, max_wait_time * time_loops)
+            eprint(msg)
 
         if len(the_set) < min_pool_size:
             eprint("\nlen(the_set) is {} waiting for min_pool_size: {}\n".format(len(the_set), min_pool_size))
@@ -61,12 +74,13 @@ def append_to_set(*,
 # add time-like memory limit
 # the longer the max_wait, the larger buffer_set will be,
 # resulting in better mixing
-def randomize_iterator(iterator, *,
+def randomize_iterator(iterator,
+                       *,
                        min_pool_size,
                        max_wait_time,
                        buffer_set=None,
                        verbose=False,
-                       debug=False):
+                       debug=False,):
 
     assert max_wait_time
     assert min_pool_size
@@ -123,6 +137,9 @@ def input_iterator(null=False,
     byte = b'\n'
     if null:
         byte = b'\x00'
+
+    if strings and select.select([sys.stdin,], [], [], 0.0)[0]:
+        raise ValueError("Both arguments AND stdin were proveded.")
 
     if strings:
         iterator = strings
