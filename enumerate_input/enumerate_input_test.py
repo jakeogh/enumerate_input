@@ -52,14 +52,12 @@ def cli(args,
     if not args:
         ic('waiting for input')
 
-    for index, path in enumerate_input(iterator=args,
-                                       null=null,
-                                       debug=debug,
-                                       verbose=verbose):
-        path = Path(path)
-
+    for index, arg in enumerate_input(iterator=args,
+                                      null=null,
+                                      debug=debug,
+                                      verbose=verbose):
         if verbose or simulate:
-            ic(index, path)
+            ic(index, arg)
         if count:
             if count > (index + 1):
                 ic(count)
@@ -69,8 +67,3 @@ def cli(args,
             continue
 
         ic(arg)
-
-#        if ipython:
-#            import IPython; IPython.embed()
-
-
