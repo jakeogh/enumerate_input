@@ -1,96 +1,163 @@
 #!/usr/bin/env python3
 
-# pylint: disable=C0111  # docstrings are always outdated and wrong
-# pylint: disable=W0511  # todo is encouraged
-# pylint: disable=C0301  # line too long
-# pylint: disable=R0902  # too many instance attributes
-# pylint: disable=C0302  # too many lines in module
-# pylint: disable=C0103  # single letter var names, func name too descriptive
-# pylint: disable=R0911  # too many return statements
-# pylint: disable=R0912  # too many branches
-# pylint: disable=R0915  # too many statements
-# pylint: disable=R0913  # too many arguments
-# pylint: disable=R1702  # too many nested blocks
-# pylint: disable=R0914  # too many local variables
-# pylint: disable=R0903  # too few public methods
-# pylint: disable=E1101  # no member for base
-# pylint: disable=W0201  # attribute defined outside __init__
-# pylint: disable=R0916  # Too many boolean expressions in if statement
-## pylint: disable=W0703  # catching too general exception
-
-
-# TODO:
-#   https://github.com/kvesteri/validators
-import os
 import sys
-import click
-from pathlib import Path
+import time
+import secrets
+from kcl.printops import eprint
+from kcl.byteops import read_by_byte
+from itertools import zip_longest
 from icecream import ic
-from kcl.iterops import enumerate_input
-
-ic.configureOutput(includeContext=True)
-# import IPython; IPython.embed()
-# import pdb; pdb.set_trace()
-# from pudb import set_trace; set_trace(paused=False)
-
-global APP_NAME
-APP_NAME = 'enumerate_input'
 
 
-# DONT CHANGE FUNC NAME
-@click.command()
-@click.argument("paths", type=str, nargs=-1)
-@click.argument("sysskel",
-                type=click.Path(exists=False,
-                                dir_okay=True,
-                                file_okay=False,
-                                path_type=str,
-                                allow_dash=False),
-                nargs=1,
-                required=True)
-@click.option('--add', is_flag=True)
-@click.option('--verbose', is_flag=True)
-@click.option('--debug', is_flag=True)
-#@click.option('--ipython', is_flag=True)
-@click.option('--simulate', is_flag=True)
-@click.option('--count', type=str)
-@click.option("--null", is_flag=True)
-#@click.group()
-def cli(paths,
-        sysskel,
-        verbose,
-        debug,
-        ipython,
-        simulate,
-        count,
-        null,):
-
+def true_items_in_iterator(iterator, verbose=False):
     if verbose:
-        ic(sys.stdout.isatty())
-
-    if not paths:
-        ic('waiting for input')
-
-    for index, path in enumerate_input(iterator=paths,
-                                       null=null,
-                                       debug=debug,
-                                       verbose=verbose):
-        path = Path(path)
-
-        if verbose or simulate:
-            ic(index, path)
-        if count:
-            if count > (index + 1):
-                ic(count)
-                sys.exit(0)
-
-        if simulate:
-            continue
-
-        with open(path, 'rb') as fh:
-            path_bytes_data = fh.read()
-
-#        if ipython:
-#            import IPython; IPython.embed()
+        ic(iterator)
+    answer = sum(x for x in iterator if x is True)
+    return answer
 
 
+# https://docs.python.org/3/library/itertools.html#itertools-recipes
+def grouper(iterable, n, fillvalue=None):
+    args = [iter(iterable)] * n
+    return zip_longest(*args, fillvalue=fillvalue)
+
+
+def compact(items):
+    return [item for item in items if item]
+
+
+def append_to_set(*,
+                  iterator,
+                  the_set,
+                  max_wait_time,
+                  min_pool_size,  # the_set always has 1 item
+                  verbose=False,
+                  debug=False):
+
+    assert max_wait_time > 0.01
+    assert min_pool_size >= 2
+
+    time_loops = 0
+    eprint("\nWaiting for min_pool_size: {}\n".format(min_pool_size))
+    while len(the_set) < min_pool_size:
+        start_time = time.time()
+        while (time.time() - start_time) < max_wait_time:
+            time_loops += 1
+            try:
+                the_set.add(next(iterator))
+            except StopIteration:
+                pass
+
+        if time_loops > 1:
+            eprint("\nWarning: min_pool_size: {} was not reached in max_wait_time: {}s so actual wait time was: {}x {}s\n".format(min_pool_size, max_wait_time, time_loops, max_wait_time * time_loops))
+
+        if len(the_set) < min_pool_size:
+            eprint("\nlen(the_set) is {} waiting for min_pool_size: {}\n".format(len(the_set), min_pool_size))
+
+    assert time_loops > 0
+    return the_set
+
+
+# add time-like memory limit
+# the longer the max_wait, the larger buffer_set will be,
+# resulting in better mixing
+def randomize_iterator(iterator, *,
+                       min_pool_size,
+                       max_wait_time,
+                       buffer_set=None,
+                       verbose=False,
+                       debug=False):
+
+    assert max_wait_time
+    assert min_pool_size
+
+    if min_pool_size < 2:
+        min_pool_size = 2
+
+    if not buffer_set:
+        buffer_set = set()
+        try:
+            buffer_set.add(next(iterator))
+        except StopIteration:
+            pass
+
+    buffer_set = append_to_set(iterator=iterator,
+                               the_set=buffer_set,
+                               min_pool_size=min_pool_size,
+                               max_wait_time=max_wait_time,
+                               verbose=verbose,
+                               debug=debug)
+
+    while buffer_set:
+        try:
+            buffer_set.add(next(iterator))
+            buffer_set.add(next(iterator))
+        except StopIteration:
+            pass
+
+        buffer_set_length = len(buffer_set)
+        random_index = secrets.randbelow(buffer_set_length)
+        next_item = list(buffer_set).pop(random_index)
+        buffer_set.remove(next_item)
+        if debug:
+            eprint("Chose 1 item out of", buffer_set_length)
+
+        if debug:
+            eprint("len(buffer_set):", buffer_set_length - 1)
+
+        if verbose:
+            ic(len(buffer_set), random_index, next_item)
+
+        yield next_item
+
+
+def input_iterator(null=False,
+                   strings=None,
+                   dont_decode=False,
+                   random=False,
+                   loop=False,
+                   verbose=False,
+                   debug=False,
+                   head=None):
+
+    byte = b'\n'
+    if null:
+        byte = b'\x00'
+
+    if strings:
+        iterator = strings
+    else:
+        iterator = read_by_byte(sys.stdin.buffer, byte=byte)
+
+    if random:
+        iterator = randomize_iterator(iterator, min_pool_size=1, max_wait_time=1)
+
+    lines_output = 0
+    for index, string in enumerate(iterator):
+        if debug:
+            ic(index, string)
+
+        if not dont_decode:
+            if isinstance(string, bytes):
+                string = string.decode('utf8')
+
+        yield string
+        lines_output += 1
+
+        if head:
+            if lines_output >= head:
+                return
+
+
+def enumerate_input(*,
+                    iterator,
+                    null,
+                    verbose=False,
+                    debug=False,
+                    head=None):
+    for index, thing in enumerate(input_iterator(strings=iterator,
+                                                 null=null,
+                                                 head=head,
+                                                 debug=debug,
+                                                 verbose=verbose)):
+        yield index, thing
