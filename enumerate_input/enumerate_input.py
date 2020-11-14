@@ -146,7 +146,7 @@ def input_iterator(null=False,
     else:
         iterator = read_by_byte(sys.stdin.buffer, byte=byte)
         if verbose:
-            ic('waiting for input')
+            ic('waiting for input', byte)
 
     if random:
         iterator = randomize_iterator(iterator, min_pool_size=1, max_wait_time=1)
