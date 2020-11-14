@@ -171,6 +171,7 @@ def input_iterator(null=False,
 def enumerate_input(*,
                     iterator,
                     null,
+                    count=False,
                     verbose=False,
                     debug=False,
                     head=None):
@@ -179,4 +180,6 @@ def enumerate_input(*,
                                                  head=head,
                                                  debug=debug,
                                                  verbose=verbose)):
+        if (index + 1) > count:
+            return
         yield index, thing
