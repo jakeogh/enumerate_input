@@ -24,7 +24,7 @@ config = {
     "install_requires": dependencies,
     "entry_points": {
         "console_scripts": [
-            "enumerate_input=enumerate_input.enumerate_input:cli",
+            "enumerate_input_test=enumerate_input.enumerate_input_test:cli",
         ],
     },
 }
