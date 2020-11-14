@@ -175,6 +175,8 @@ def enumerate_input(*,
                     verbose=False,
                     debug=False,
                     head=None):
+    if count:
+        count = int(count)
     for index, thing in enumerate(input_iterator(strings=iterator,
                                                  null=null,
                                                  head=head,
