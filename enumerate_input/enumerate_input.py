@@ -182,7 +182,4 @@ def enumerate_input(*,
         inner_iterator = deque(inner_iterator, maxlen=tail)
 
     for index, thing in enumerate(inner_iterator):
-        if head:
-            if (index + 1) > head:
-                return
         yield index, thing
