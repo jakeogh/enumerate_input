@@ -4,6 +4,7 @@ import sys
 import time
 import select
 import secrets
+from collections import deque
 from icecream import ic
 
 
@@ -13,26 +14,16 @@ def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
 
-def read_by_byte(file_object, byte):    # by ikanobori
+def read_by_byte(file_object, byte):    # orig by ikanobori
     buf = b""
     for chunk in iter(lambda: file_object.read(4096), b""):
-        #ic(len(chunk))
         buf += chunk
         sep = buf.find(byte)
-        #ic(sep, len(buf))
 
         while sep != -1:
-            #sep_end_marker = len(buf) - 1
-            #ic(sep_end_marker)
-            #if sep == sep_end_marker:
-            #    ic(sep, "return")
-            #    return
-
             ret, buf = buf[:sep], buf[sep + 1:]
             yield ret
             sep = buf.find(byte)
-            #ic("after", sep)
-
     #ic("fell off end")
     # Decide what you want to do with leftover
 
@@ -115,10 +106,8 @@ def randomize_iterator(iterator,
         buffer_set.remove(next_item)
         if debug:
             eprint("Chose 1 item out of", buffer_set_length)
-
         if debug:
             eprint("len(buffer_set):", buffer_set_length - 1)
-
         if verbose:
             ic(len(buffer_set), random_index, next_item)
 
@@ -131,8 +120,7 @@ def input_iterator(null=False,
                    random=False,
                    loop=False,
                    verbose=False,
-                   debug=False,
-                   head=None):
+                   debug=False,):
 
     byte = b'\n'
     if null:
@@ -149,7 +137,9 @@ def input_iterator(null=False,
             ic('waiting for input', byte)
 
     if random:
-        iterator = randomize_iterator(iterator, min_pool_size=1, max_wait_time=1)
+        iterator = randomize_iterator(iterator,
+                                      min_pool_size=1,
+                                      max_wait_time=1,)
 
     lines_output = 0
     for index, string in enumerate(iterator):
@@ -163,25 +153,28 @@ def input_iterator(null=False,
         yield string
         lines_output += 1
 
-        if head:
-            if lines_output >= head:
-                return
-
 
 def enumerate_input(*,
                     iterator,
                     null,
-                    count=False,
                     verbose=False,
                     debug=False,
-                    head=None):
-    if count:
-        count = int(count)
-    for index, thing in enumerate(input_iterator(strings=iterator,
-                                                 null=null,
-                                                 head=head,
-                                                 debug=debug,
-                                                 verbose=verbose)):
-        if (index + 1) > count:
-            return
+                    head=None,
+                    tail=None,):
+
+    inner_iterator = input_iterator(strings=iterator,
+                                    null=null,
+                                    debug=debug,
+                                    verbose=verbose))
+    if head:
+        head = int(head)
+
+    if tail:
+        tail = int(tail)
+        inner_iterator = deque(inner_iterator, maxlen=tail)
+
+    for index, thing in enumerate(inner_iterator):
+        if head:
+            if (index + 1) > head:
+                return
         yield index, thing
