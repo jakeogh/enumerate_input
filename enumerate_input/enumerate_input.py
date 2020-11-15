@@ -28,6 +28,13 @@ def read_by_byte(file_object, byte):    # orig by ikanobori
     # Decide what you want to do with leftover
 
 
+def headgen(iterator, count):
+    for index, item in enumerate(iterator):
+        if index > count:
+            return
+        yield item
+
+
 def append_to_set(*,
                   iterator,
                   the_set,
@@ -168,6 +175,7 @@ def enumerate_input(*,
                                     verbose=verbose)
     if head:
         head = int(head)
+        inner_iterator = headgen(inner_iterator, head)
 
     if tail:
         tail = int(tail)
