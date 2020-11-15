@@ -165,7 +165,7 @@ def enumerate_input(*,
     inner_iterator = input_iterator(strings=iterator,
                                     null=null,
                                     debug=debug,
-                                    verbose=verbose))
+                                    verbose=verbose)
     if head:
         head = int(head)
 
