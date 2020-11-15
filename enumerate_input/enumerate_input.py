@@ -30,7 +30,7 @@ def read_by_byte(file_object, byte):    # orig by ikanobori
 
 def headgen(iterator, count):
     for index, item in enumerate(iterator):
-        if index > count:
+        if (index + 1) > count:
             return
         yield item
 
