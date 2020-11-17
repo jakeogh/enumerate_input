@@ -133,15 +133,18 @@ def input_iterator(null=False,
     if null:
         byte = b'\x00'
 
-    if strings and select.select([sys.stdin,], [], [], 0.0)[0]:
+    stdin_given = select.select([sys.stdin,], [], [], 0.0)[0]
+
+    if strings and stdin_given:
         raise ValueError("Both arguments AND stdin were proveded.")
 
     if strings:
         iterator = strings
-    else:
+    elif stdin_given:
         iterator = read_by_byte(sys.stdin.buffer, byte=byte)
         if verbose:
             ic('waiting for input', byte)
+
 
     if random:
         iterator = randomize_iterator(iterator,
@@ -167,12 +170,14 @@ def enumerate_input(*,
                     verbose=False,
                     debug=False,
                     head=None,
-                    tail=None,):
+                    tail=None,
+                    ask=False,):
 
     inner_iterator = input_iterator(strings=iterator,
                                     null=null,
                                     debug=debug,
-                                    verbose=verbose)
+                                    verbose=verbose,
+                                    ask=ask,)
     if head:
         head = int(head)
         inner_iterator = headgen(inner_iterator, head)
