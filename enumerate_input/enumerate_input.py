@@ -124,7 +124,6 @@ def randomize_iterator(iterator,
 def input_iterator(null=False,
                    strings=None,
                    dont_decode=False,
-                   ask=False,
                    random=False,
                    loop=False,
                    verbose=False,
@@ -143,11 +142,10 @@ def input_iterator(null=False,
 
     if strings:
         iterator = strings
-    elif stdin_given:
+    else:
         iterator = read_by_byte(sys.stdin.buffer, byte=byte)
         if verbose:
             ic('waiting for input', byte)
-
 
     if random:
         iterator = randomize_iterator(iterator,
@@ -173,8 +171,7 @@ def enumerate_input(*,
                     verbose=False,
                     debug=False,
                     head=None,
-                    tail=None,
-                    ask=False,):
+                    tail=None,):
 
     inner_iterator = input_iterator(strings=iterator,
                                     null=null,
