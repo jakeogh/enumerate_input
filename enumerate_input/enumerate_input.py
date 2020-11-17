@@ -135,6 +135,8 @@ def input_iterator(null=False,
         byte = b'\x00'
 
     stdin_given = select.select([sys.stdin,], [], [], 0.0)[0]
+    if verbose:
+        ic(stdin_given)
 
     if strings and stdin_given:
         raise ValueError("Both arguments AND stdin were proveded.")
