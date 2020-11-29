@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
+import secrets
+import select
 import sys
 import time
-import select
-import secrets
 from collections import deque
+
 from icecream import ic
 
 
@@ -178,11 +179,11 @@ def enumerate_input(*,
                                     debug=debug,
                                     verbose=verbose,)
     if head:
-        head = int(head)
+        #head = int(head)
         inner_iterator = headgen(inner_iterator, head)
 
     if tail:
-        tail = int(tail)
+        #tail = int(tail)
         inner_iterator = deque(inner_iterator, maxlen=tail)
 
     for index, thing in enumerate(inner_iterator):

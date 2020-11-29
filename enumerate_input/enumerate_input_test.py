@@ -19,8 +19,11 @@
 
 
 import sys
+from math import inf
+
 import click
 from icecream import ic
+
 from enumerate_input import enumerate_input
 
 
@@ -29,7 +32,7 @@ from enumerate_input import enumerate_input
 @click.option('--verbose', is_flag=True)
 @click.option('--debug', is_flag=True)
 @click.option('--simulate', is_flag=True)
-@click.option('--count', type=str)
+@click.option('--count', type=float, default=inf)
 @click.option("--printn", is_flag=True)
 def cli(args,
         verbose,
