@@ -140,14 +140,14 @@ def randomize_iterator(iterator,
 
 
 def iterate_input(null=False,
-                   strings=None,
-                   dont_decode=False,
-                   head=False,
-                   tail=False,
-                   random=False,
-                   loop=False,
-                   verbose=False,
-                   debug=False,):
+                  strings=None,
+                  dont_decode=False,
+                  head=False,
+                  tail=False,
+                  random=False,
+                  loop=False,
+                  verbose=False,
+                  debug=False,):
 
     byte = b'\n'
     if null:
