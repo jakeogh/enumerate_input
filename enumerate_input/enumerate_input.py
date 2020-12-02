@@ -1,5 +1,22 @@
 #!/usr/bin/env python3
 
+# pylint: disable=C0111  # docstrings are always outdated and wrong
+# pylint: disable=W0511  # todo is encouraged
+# pylint: disable=C0301  # line too long
+# pylint: disable=R0902  # too many instance attributes
+# pylint: disable=C0302  # too many lines in module
+# pylint: disable=C0103  # single letter var names, func name too descriptive
+# pylint: disable=R0911  # too many return statements
+# pylint: disable=R0912  # too many branches
+# pylint: disable=R0915  # too many statements
+# pylint: disable=R0913  # too many arguments
+# pylint: disable=R1702  # too many nested blocks
+# pylint: disable=R0914  # too many local variables
+# pylint: disable=R0903  # too few public methods
+# pylint: disable=E1101  # no member for base
+# pylint: disable=W0201  # attribute defined outside __init__
+# pylint: disable=R0916  # Too many boolean expressions in if statement
+
 import secrets
 import select
 import sys
@@ -122,9 +139,11 @@ def randomize_iterator(iterator,
         yield next_item
 
 
-def input_iterator(null=False,
+def iterate_input(null=False,
                    strings=None,
                    dont_decode=False,
+                   head=False,
+                   tail=False,
                    random=False,
                    loop=False,
                    verbose=False,
@@ -153,6 +172,12 @@ def input_iterator(null=False,
                                       min_pool_size=1,
                                       max_wait_time=1,)
 
+    if head:
+        iterator = headgen(iterator, head)
+
+    if tail:  # this seems like the right order, can access any "tail"
+        iterator = deque(iterator, maxlen=tail)
+
     lines_output = 0
     for index, string in enumerate(iterator):
         if debug:
@@ -174,17 +199,12 @@ def enumerate_input(*,
                     head=None,
                     tail=None,):
 
-    inner_iterator = input_iterator(strings=iterator,
+    inner_iterator = iterate_input(strings=iterator,
                                     null=null,
+                                    head=head,
+                                    tail=tail,
                                     debug=debug,
                                     verbose=verbose,)
-    if head:
-        #head = int(head)
-        inner_iterator = headgen(inner_iterator, head)
-
-    if tail:
-        #tail = int(tail)
-        inner_iterator = deque(inner_iterator, maxlen=tail)
 
     for index, thing in enumerate(inner_iterator):
         yield index, thing
