@@ -139,8 +139,8 @@ def randomize_iterator(iterator,
         yield next_item
 
 
-def iterate_input(null=False,
-                  strings=None,
+def iterate_input(iterator=None,
+                  null=False,
                   dont_decode=False,
                   head=False,
                   tail=False,
@@ -157,11 +157,11 @@ def iterate_input(null=False,
     if verbose:
         ic(stdin_given)
 
-    if strings and stdin_given:
+    if iterator and stdin_given:
         raise ValueError("Both arguments AND stdin were proveded.")
 
-    if strings:
-        iterator = strings
+    if iterator:
+        iterator = iterator
     else:
         iterator = read_by_byte(sys.stdin.buffer, byte=byte)
         if verbose:
@@ -199,7 +199,7 @@ def enumerate_input(*,
                     head=None,
                     tail=None,):
 
-    inner_iterator = iterate_input(strings=iterator,
+    inner_iterator = iterate_input(iterator=iterator,
                                     null=null,
                                     head=head,
                                     tail=tail,
