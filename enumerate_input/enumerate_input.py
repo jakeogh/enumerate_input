@@ -200,6 +200,7 @@ def enumerate_input(*,
                     null,
                     verbose=False,
                     debug=False,
+                    skip=False,
                     head=None,
                     tail=None,):
 
@@ -207,6 +208,7 @@ def enumerate_input(*,
                                    null=null,
                                    head=head,
                                    tail=tail,
+                                   skip=skip,
                                    debug=debug,
                                    verbose=verbose,)
 
