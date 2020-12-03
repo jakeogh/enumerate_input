@@ -144,6 +144,7 @@ def iterate_input(iterator=None,
                   dont_decode=False,
                   head=False,
                   tail=False,
+                  skip=False,
                   random=False,
                   loop=False,
                   verbose=False,
@@ -171,7 +172,6 @@ def iterate_input(iterator=None,
         iterator = randomize_iterator(iterator,
                                       min_pool_size=1,
                                       max_wait_time=1,)
-
     if head:
         iterator = headgen(iterator, head)
 
@@ -187,6 +187,10 @@ def iterate_input(iterator=None,
             if isinstance(string, bytes):
                 string = string.decode('utf8')
 
+        if skip:
+            if index + 1 <= skip:
+                continue
+
         yield string
         lines_output += 1
 
@@ -200,11 +204,11 @@ def enumerate_input(*,
                     tail=None,):
 
     inner_iterator = iterate_input(iterator=iterator,
-                                    null=null,
-                                    head=head,
-                                    tail=tail,
-                                    debug=debug,
-                                    verbose=verbose,)
+                                   null=null,
+                                   head=head,
+                                   tail=tail,
+                                   debug=debug,
+                                   verbose=verbose,)
 
     for index, thing in enumerate(inner_iterator):
         yield index, thing
