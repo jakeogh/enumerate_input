@@ -23,8 +23,6 @@ import sys
 import time
 from collections import deque
 
-from icecream import ic
-
 
 def eprint(*args, **kwargs):
     if 'file' in kwargs.keys():
@@ -32,17 +30,31 @@ def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
 
-def read_by_byte(file_object, byte):    # orig by ikanobori
+try:
+    from icecream import ic  # https://github.com/gruns/icecream
+except ImportError:
+    ic = eprint
+
+
+def read_by_byte(file_object,
+                 byte,
+                 verbose=False,
+                 debug=False,):    # orig by ikanobori
+    if verbose:
+        ic(byte)
     buf = b""
     for chunk in iter(lambda: file_object.read(4096), b""):
         buf += chunk
         sep = buf.find(byte)
+        if debug:
+            ic(sep)
 
         while sep != -1:
             ret, buf = buf[:sep], buf[sep + 1:]
             yield ret
             sep = buf.find(byte)
-    #ic("fell off end")
+    if debug:
+        ic("fell off end:", ret, buf)
     # Decide what you want to do with leftover
 
 
