@@ -213,6 +213,9 @@ def iterate_input(iterator=None,
             if index + 1 <= skip:
                 continue
 
+        if debug:
+            ic(len(string))
+
         yield string
         lines_output += 1
 
