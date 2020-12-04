@@ -155,6 +155,9 @@ def iterate_input(iterator=None,
     if null:
         byte = b'\x00'
 
+    if verbose:
+        ic(byte)
+
     if not iterator:
         if disable_stdin:
             raise ValueError('iterator is None and disable_stdin=True, nothing to read')
