@@ -186,12 +186,14 @@ def iterate_input(iterator=None,
         iterator = iterator
     else:
         assert not disable_stdin
-        iterator = read_by_byte(sys.stdin.buffer,
-                                byte=byte,
-                                verbose=verbose,
-                                debug=debug,)
+        iterator = sys.stdin.buffer
         if verbose:
             ic('waiting for input on sys.stdin.buffer', byte)
+
+    iterator = read_by_byte(sys.stdin.buffer,
+                            byte=byte,
+                            verbose=verbose,
+                            debug=debug,)
 
     if random:
         iterator = randomize_iterator(iterator,
