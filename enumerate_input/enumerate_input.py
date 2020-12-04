@@ -141,6 +141,7 @@ def randomize_iterator(iterator,
 
 def iterate_input(iterator=None,
                   null=False,
+                  disable_stdin=False,
                   dont_decode=False,
                   head=False,
                   tail=False,
@@ -154,16 +155,22 @@ def iterate_input(iterator=None,
     if null:
         byte = b'\x00'
 
-    stdin_given = select.select([sys.stdin,], [], [], 0.0)[0]
-    if verbose:
-        ic(stdin_given)
+    if not iterator:
+        if disable_stdin:
+            raise ValueError('iterator is None and disable_stdin=True, nothing to read')
 
-    if iterator and stdin_given:
-        raise ValueError("Both arguments AND stdin were proveded.")
+    if not disable_stdin:
+        stdin_given = select.select([sys.stdin,], [], [], 0.0)[0]
+        if verbose:
+            ic(stdin_given)
+
+        if iterator and stdin_given:
+            raise ValueError("Both arguments AND stdin were proveded.")
 
     if iterator:
         iterator = iterator
     else:
+        assert not disable_stdin
         iterator = read_by_byte(sys.stdin.buffer, byte=byte)
         if verbose:
             ic('waiting for input', byte)
@@ -198,6 +205,7 @@ def iterate_input(iterator=None,
 def enumerate_input(*,
                     iterator,
                     null,
+                    disable_stdin=False,
                     verbose=False,
                     debug=False,
                     skip=False,
@@ -206,6 +214,7 @@ def enumerate_input(*,
 
     inner_iterator = iterate_input(iterator=iterator,
                                    null=null,
+                                   disable_stdin=disable_stdin,
                                    head=head,
                                    tail=tail,
                                    skip=skip,
