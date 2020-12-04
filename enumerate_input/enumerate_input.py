@@ -54,7 +54,7 @@ def read_by_byte(file_object,
             yield ret
             sep = buf.find(byte)
     if debug:
-        ic("fell off end:", ret, buf)
+        ic('fell off end:', ret, buf)
     # Decide what you want to do with leftover
 
 
@@ -180,7 +180,7 @@ def iterate_input(iterator=None,
             ic(stdin_given)
 
         if iterator and stdin_given:
-            raise ValueError("Both arguments AND stdin were proveded.")
+            raise ValueError('Both arguments AND stdin were proveded')
 
     if iterator:
         iterator = iterator
