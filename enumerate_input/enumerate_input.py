@@ -190,15 +190,11 @@ def iterate_input(iterator=None,
         if verbose:
             ic('waiting for input on sys.stdin.buffer', byte)
 
-    try:
+    if hasattr(iterator, 'read'):
         iterator = read_by_byte(iterator,
                                 byte=byte,
                                 verbose=verbose,
                                 debug=debug,)
-    except AttributeError as e:
-        ic(e)
-        ic(e.args)
-        pass    # not a file object
 
     if random:
         iterator = randomize_iterator(iterator,
