@@ -191,7 +191,7 @@ def iterate_input(iterator=None,
                                 verbose=verbose,
                                 debug=debug,)
         if verbose:
-            ic('waiting for input', byte)
+            ic('waiting for input on sys.stdin.buffer', byte)
 
     if random:
         iterator = randomize_iterator(iterator,
