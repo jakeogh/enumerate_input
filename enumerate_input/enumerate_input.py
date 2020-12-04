@@ -190,7 +190,7 @@ def iterate_input(iterator=None,
         if verbose:
             ic('waiting for input on sys.stdin.buffer', byte)
 
-    iterator = read_by_byte(sys.stdin.buffer,
+    iterator = read_by_byte(iterator,
                             byte=byte,
                             verbose=verbose,
                             debug=debug,)
