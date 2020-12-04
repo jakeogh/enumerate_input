@@ -47,7 +47,7 @@ def read_by_byte(file_object,
         buf += chunk
         sep = buf.find(byte)
         if debug:
-            ic(sep)
+            ic(buf, sep)
 
         while sep != -1:
             ret, buf = buf[:sep], buf[sep + 1:]
