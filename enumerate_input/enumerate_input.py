@@ -185,6 +185,7 @@ def iterate_input(iterator=None,
         #if iterator and stdin_given:
         #    raise ValueError('Both arguments AND stdin were proveded')
 
+    ic(stdin_given)
     if stdin_given:
         iterator = sys.stdin.buffer
         if verbose:
@@ -198,6 +199,7 @@ def iterate_input(iterator=None,
     #    if verbose:
     #        ic('waiting for input on sys.stdin.buffer', byte)
 
+    ic(iterator)
     if hasattr(iterator, 'read'):
         iterator = read_by_byte(iterator,
                                 byte=byte,
