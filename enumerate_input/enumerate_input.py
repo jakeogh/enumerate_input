@@ -17,11 +17,13 @@
 # pylint: disable=W0201  # attribute defined outside __init__
 # pylint: disable=R0916  # Too many boolean expressions in if statement
 
+import os
 import secrets
 import select
 import sys
 import time
 from collections import deque
+from stat import S_ISFIFO
 
 
 def eprint(*args, **kwargs):
@@ -177,6 +179,7 @@ def iterate_input(iterator=None,
     if disable_stdin:
         stdin_given = False
     else:
+        stdin_is_a_fifo = S_ISFIFO(os.fstat(sys.stdin.fileno()).st_mode)
         stdin_given = sys.stdin.isatty()
         #stdin_given = select.select([sys.stdin,], [], [], 0.0)[0]
         if verbose:
@@ -185,8 +188,8 @@ def iterate_input(iterator=None,
         #if iterator and stdin_given:
         #    raise ValueError('Both arguments AND stdin were proveded')
 
-    ic(stdin_given)
-    if stdin_given:
+    ic(stdin_is_a_fifo)
+    if stdin_is_a_fifo:
         iterator = sys.stdin.buffer
         if verbose:
             ic('waiting for input on sys.stdin.buffer', byte)
