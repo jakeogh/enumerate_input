@@ -241,7 +241,7 @@ def iterate_input(iterator=None,
 
 def enumerate_input(*,
                     iterator,
-                    null,
+                    null=False,
                     disable_stdin=False,
                     verbose=False,
                     debug=False,
