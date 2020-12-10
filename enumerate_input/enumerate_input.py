@@ -175,7 +175,8 @@ def iterate_input(iterator=None,
             raise ValueError('iterator is None and disable_stdin=True, nothing to read')
 
     if not disable_stdin:
-        stdin_given = select.select([sys.stdin,], [], [], 0.0)[0]
+        stdin_given = sys.stdin.isatty()
+        #stdin_given = select.select([sys.stdin,], [], [], 0.0)[0]
         if verbose:
             ic(stdin_given)
 
