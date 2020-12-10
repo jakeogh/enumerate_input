@@ -174,22 +174,29 @@ def iterate_input(iterator=None,
         if disable_stdin:
             raise ValueError('iterator is None and disable_stdin=True, nothing to read')
 
-    if not disable_stdin:
+    if disable_stdin:
+        stdin_given = False
+    else:
         stdin_given = sys.stdin.isatty()
         #stdin_given = select.select([sys.stdin,], [], [], 0.0)[0]
         if verbose:
             ic(stdin_given)
 
-        if iterator and stdin_given:
-            raise ValueError('Both arguments AND stdin were proveded')
+        #if iterator and stdin_given:
+        #    raise ValueError('Both arguments AND stdin were proveded')
 
-    if iterator:
-        iterator = iterator
-    else:
-        assert not disable_stdin
+    if stdin_given:
         iterator = sys.stdin.buffer
         if verbose:
             ic('waiting for input on sys.stdin.buffer', byte)
+
+    #if iterator:
+    #    iterator = iterator
+    #else:
+    #    assert not disable_stdin
+    #    iterator = sys.stdin.buffer
+    #    if verbose:
+    #        ic('waiting for input on sys.stdin.buffer', byte)
 
     if hasattr(iterator, 'read'):
         iterator = read_by_byte(iterator,
