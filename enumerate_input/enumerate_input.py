@@ -247,7 +247,11 @@ def enumerate_input(*,
                     debug=False,
                     skip=False,
                     head=None,
+                    progress=False,
                     tail=None,):
+
+    if progress and (verbose or debug):
+        raise ValueError('--progress and --verbose/--debug are mutually exclusive')
 
     inner_iterator = iterate_input(iterator=iterator,
                                    null=null,
@@ -259,4 +263,8 @@ def enumerate_input(*,
                                    verbose=verbose,)
 
     for index, thing in enumerate(inner_iterator):
+        if progress:
+            print(index + 1, file=sys.stderr, end='\r')
         yield index, thing
+    if progress:
+        print("", file=sys.stderr)
