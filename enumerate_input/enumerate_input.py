@@ -251,14 +251,14 @@ def iterate_input(iterator=None,
 
 def enumerate_input(*,
                     iterator,
+                    skip,
+                    head,
+                    tail,
                     null=False,
                     disable_stdin=False,
                     verbose=False,
                     debug=False,
-                    skip=False,
-                    head=None,
-                    progress=False,
-                    tail=None,):
+                    progress=False,):
 
     if progress and (verbose or debug):
         raise ValueError('--progress and --verbose/--debug are mutually exclusive')
