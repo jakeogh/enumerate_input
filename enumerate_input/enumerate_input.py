@@ -67,6 +67,13 @@ def headgen(iterator, count):
         yield item
 
 
+def skipgen(iterator, count):
+    for index, item in enumerate(iterator):
+        if (index + 1) < count:
+            continue
+        yield item
+
+
 def append_to_set(*,
                   iterator,
                   the_set,
@@ -213,24 +220,27 @@ def iterate_input(iterator=None,
         iterator = randomize_iterator(iterator,
                                       min_pool_size=1,
                                       max_wait_time=1,)
+    if skip:
+        iterator = skipgen(iterator, skip,)
+
     if head:
-        iterator = headgen(iterator, head)
+        iterator = headgen(iterator, head,)
 
     if tail:  # this seems like the right order, can access any "tail"
-        iterator = deque(iterator, maxlen=tail)
+        iterator = deque(iterator, maxlen=tail,)
 
     lines_output = 0
     for index, string in enumerate(iterator):
         if debug:
             ic(index, string)
 
+        #if skip:
+        #    if index + 1 <= skip:
+        #        continue
+
         if not dont_decode:
             if isinstance(string, bytes):
                 string = string.decode('utf8')
-
-        if skip:
-            if index + 1 <= skip:
-                continue
 
         if debug:
             ic(len(string))
