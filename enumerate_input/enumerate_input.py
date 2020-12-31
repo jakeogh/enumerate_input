@@ -69,7 +69,7 @@ def headgen(iterator, count):
 
 def skipgen(iterator, count):
     for index, item in enumerate(iterator):
-        if (index + 1) < count:
+        if (index + 1) <= count:
             continue
         yield item
 
