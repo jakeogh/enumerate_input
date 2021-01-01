@@ -183,6 +183,10 @@ def iterate_input(iterator=None,
     if verbose:
         ic(byte, skip, head, tail, null, disable_stdin, random, dont_decode)
 
+    assert skip is not None
+    assert head is not None
+    assert tail is not None
+
     if not iterator:
         if disable_stdin:
             raise ValueError('iterator is None and disable_stdin=True, nothing to read')
