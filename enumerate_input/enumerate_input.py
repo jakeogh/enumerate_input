@@ -177,7 +177,7 @@ def iterate_input(iterator=None,
         byte = b'\x00'
 
     if verbose:
-        ic(byte, skip, head, tail, null, disable_sdin, random, dont_decode)
+        ic(byte, skip, head, tail, null, disable_stdin, random, dont_decode)
 
     if not iterator:
         if disable_stdin:
