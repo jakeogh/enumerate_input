@@ -60,14 +60,18 @@ def read_by_byte(file_object,
     # Decide what you want to do with leftover
 
 
-def headgen(iterator, count):
+def headgen(*, iterator, count, verbose):
+    if verbose:
+        ic(count)
     for index, item in enumerate(iterator):
         if (index + 1) > count:
             return
         yield item
 
 
-def skipgen(iterator, count):
+def skipgen(*, iterator, count, verbose):
+    if verbose:
+        ic(count)
     for index, item in enumerate(iterator):
         if (index + 1) <= count:
             continue
@@ -219,15 +223,23 @@ def iterate_input(iterator=None,
     if random:
         iterator = randomize_iterator(iterator,
                                       min_pool_size=1,
-                                      max_wait_time=1,)
+                                      max_wait_time=1,
+                                      verbose=verbose,)
     if skip:
-        iterator = skipgen(iterator, skip,)
+        iterator = skipgen(iterator=iterator,
+                           skip=skip,
+                           verbose=verbose,)
 
     if head:
-        iterator = headgen(iterator, head,)
+        iterator = headgen(iterator=iterator,
+                           head=head,
+                           verbose=verbose,)
 
     if tail:  # this seems like the right order, can access any "tail"
-        iterator = deque(iterator, maxlen=tail,)
+        if verbose:
+            ic(tail)
+        iterator = deque(iterator,
+                         maxlen=tail,)
 
     lines_output = 0
     for index, string in enumerate(iterator):
