@@ -227,12 +227,12 @@ def iterate_input(iterator=None,
                                       verbose=verbose,)
     if skip:
         iterator = skipgen(iterator=iterator,
-                           skip=skip,
+                           count=skip,
                            verbose=verbose,)
 
     if head:
         iterator = headgen(iterator=iterator,
-                           head=head,
+                           count=head,
                            verbose=verbose,)
 
     if tail:  # this seems like the right order, can access any "tail"
