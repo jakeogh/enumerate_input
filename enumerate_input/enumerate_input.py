@@ -60,19 +60,27 @@ def read_by_byte(file_object,
     # Decide what you want to do with leftover
 
 
-def skipgen(*, iterator, count, verbose):
+def skipgen(*, iterator, count, verbose, debug):
     if verbose:
         ic(count)
+    if debug:
+        ic(iterator)
     for index, item in enumerate(iterator):
+        if debug:
+            ic(index, item)
         if (index + 1) <= count:
             continue
         yield item
 
 
-def headgen(*, iterator, count, verbose):
+def headgen(*, iterator, count, verbose, debug):
     if verbose:
         ic(count)
+    if debug:
+        ic(iterator)
     for index, item in enumerate(iterator):
+        if debug:
+            ic(index, item)
         if (index + 1) > count:
             return
         yield item
@@ -235,14 +243,16 @@ def iterate_input(iterator=None,
     if skip:
         iterator = skipgen(iterator=iterator,
                            count=skip,
-                           verbose=verbose,)
+                           verbose=verbose,
+                           debug=debug,)
         if debug:
             ic(iterator)
 
     if head:
         iterator = headgen(iterator=iterator,
                            count=head,
-                           verbose=verbose,)
+                           verbose=verbose,
+                           debug=debug,)
         if debug:
             ic(iterator)
 
@@ -292,6 +302,8 @@ def enumerate_input(*,
                                    skip=skip,
                                    debug=debug,
                                    verbose=verbose,)
+    if debug:
+        ic(inner_iterator)
 
     for index, thing in enumerate(inner_iterator):
         if progress:
