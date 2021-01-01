@@ -229,40 +229,35 @@ def iterate_input(iterator=None,
                                       min_pool_size=1,
                                       max_wait_time=1,
                                       verbose=verbose,)
-    if debug:
-        ic(iterator)
+        if debug:
+            ic(iterator)
 
     if skip:
         iterator = skipgen(iterator=iterator,
                            count=skip,
                            verbose=verbose,)
-    if debug:
-        ic(iterator)
+        if debug:
+            ic(iterator)
 
     if head:
         iterator = headgen(iterator=iterator,
                            count=head,
                            verbose=verbose,)
-    if debug:
-        ic(iterator)
+        if debug:
+            ic(iterator)
 
     if tail:  # this seems like the right order, can access any "tail"
         if verbose:
             ic(tail)
         iterator = deque(iterator,
                          maxlen=tail,)
-    if debug:
-        ic(iterator)
-
+        if debug:
+            ic(iterator)
 
     lines_output = 0
     for index, string in enumerate(iterator):
         if debug:
             ic(index, string)
-
-        #if skip:
-        #    if index + 1 <= skip:
-        #        continue
 
         if not dont_decode:
             if isinstance(string, bytes):
