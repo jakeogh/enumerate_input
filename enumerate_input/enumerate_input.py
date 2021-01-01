@@ -60,21 +60,21 @@ def read_by_byte(file_object,
     # Decide what you want to do with leftover
 
 
-def headgen(*, iterator, count, verbose):
-    if verbose:
-        ic(count)
-    for index, item in enumerate(iterator):
-        if (index + 1) > count:
-            return
-        yield item
-
-
 def skipgen(*, iterator, count, verbose):
     if verbose:
         ic(count)
     for index, item in enumerate(iterator):
         if (index + 1) <= count:
             continue
+        yield item
+
+
+def headgen(*, iterator, count, verbose):
+    if verbose:
+        ic(count)
+    for index, item in enumerate(iterator):
+        if (index + 1) > count:
+            return
         yield item
 
 
@@ -229,21 +229,31 @@ def iterate_input(iterator=None,
                                       min_pool_size=1,
                                       max_wait_time=1,
                                       verbose=verbose,)
+    if debug:
+        ic(iterator)
+
     if skip:
         iterator = skipgen(iterator=iterator,
                            count=skip,
                            verbose=verbose,)
+    if debug:
+        ic(iterator)
 
     if head:
         iterator = headgen(iterator=iterator,
                            count=head,
                            verbose=verbose,)
+    if debug:
+        ic(iterator)
 
     if tail:  # this seems like the right order, can access any "tail"
         if verbose:
             ic(tail)
         iterator = deque(iterator,
                          maxlen=tail,)
+    if debug:
+        ic(iterator)
+
 
     lines_output = 0
     for index, string in enumerate(iterator):
