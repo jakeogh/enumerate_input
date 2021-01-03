@@ -188,9 +188,6 @@ def iterate_input(iterator=None,
     if null:
         byte = b'\x00'
 
-    if verbose:
-        ic(byte, skip, head, tail, null, disable_stdin, random, dont_decode)
-
     assert skip is not None
     assert head is not None
     assert tail is not None
@@ -205,27 +202,15 @@ def iterate_input(iterator=None,
         stdin_is_a_fifo = S_ISFIFO(os.fstat(sys.stdin.fileno()).st_mode)
         stdin_is_a_tty = sys.stdin.isatty()
         #stdin_given = select.select([sys.stdin,], [], [], 0.0)[0]
-        if verbose:
-            ic(stdin_is_a_tty)
-            ic(stdin_is_a_fifo)
 
-        #if iterator and stdin_given:
-        #    raise ValueError('Both arguments AND stdin were proveded')
+    if verbose:
+        ic(byte, skip, head, tail, null, disable_stdin, random, dont_decode, stdin_is_a_tty, stdin_is_a_fifo)
 
     if stdin_is_a_fifo:
         iterator = sys.stdin.buffer
         if verbose:
             ic('waiting for input on sys.stdin.buffer', byte)
 
-    #if iterator:
-    #    iterator = iterator
-    #else:
-    #    assert not disable_stdin
-    #    iterator = sys.stdin.buffer
-    #    if verbose:
-    #        ic('waiting for input on sys.stdin.buffer', byte)
-
-    #ic(iterator)
     if hasattr(iterator, 'read'):
         iterator = read_by_byte(iterator,
                                 byte=byte,
