@@ -199,17 +199,20 @@ def iterate_input(iterator,
     if null:
         byte = b'\x00'
 
-    if skip in [0, True, None] or (skip <= 0):
+    #if skip in [0, True, None] or (skip <= 0):
+    if isinstance(skip, bool) or (skip <= 0):
         #ic('BUG', skip)
-        skip = False
+        skip = None
         #raise ValueError('skip must be False or a positive integer, not:', skip)
-    if head in [0, True, None] or (head <= 0):
+    #if head in [0, True, None] or (head <= 0):
+    if isinstance(head, bool) or (head <= 0):
         #ic('BUG', head)
-        head = False
+        head = None
         #raise ValueError('head must be False or a positive integer, not:', head)
-    if tail in [0, True, None] or (tail <= 0):
+    #if tail in [0, True, None] or (tail <= 0):
+    if isinstance(tail, bool) or (tail <= 0):
         #ic('BUG', tail)
-        tail = False
+        tail = None
         #raise ValueError('tail must be False or a positive integer, not:', tail)
 
     #assert skip is not None
