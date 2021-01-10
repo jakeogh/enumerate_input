@@ -209,12 +209,12 @@ def iterate_input(iterator,
         #raise ValueError('head must be False or a positive integer, not:', head)
     if tail in [0, True, None] or (tail <= 0):
         #ic('BUG', tail)
-        tail - False
+        tail = False
         #raise ValueError('tail must be False or a positive integer, not:', tail)
 
-    assert skip is not None
-    assert head is not None
-    assert tail is not None
+    #assert skip is not None
+    #assert head is not None
+    #assert tail is not None
 
     if not iterator:
         if disable_stdin:
