@@ -19,7 +19,7 @@
 
 import os
 import secrets
-import select
+#import select
 import sys
 import time
 from collections import deque
@@ -40,8 +40,8 @@ except ImportError:
 
 def read_by_byte(file_object,
                  byte,
-                 verbose=False,
-                 debug=False,):    # orig by ikanobori
+                 verbose: bool,
+                 debug: bool,):    # orig by ikanobori
     if verbose:
         ic(byte)
     buf = b""
@@ -60,7 +60,11 @@ def read_by_byte(file_object,
     # Decide what you want to do with leftover
 
 
-def skipgen(*, iterator, count, verbose, debug):
+def skipgen(*,
+            iterator,
+            count,
+            verbose: bool,
+            debug: bool,):
     if verbose:
         ic(count)
     if debug:
@@ -73,7 +77,11 @@ def skipgen(*, iterator, count, verbose, debug):
         yield item
 
 
-def headgen(*, iterator, count, verbose, debug):
+def headgen(*,
+            iterator,
+            count,
+            verbose: bool,
+            debug: bool,):
     if verbose:
         ic(count)
     if debug:
@@ -91,8 +99,8 @@ def append_to_set(*,
                   the_set,
                   max_wait_time,
                   min_pool_size,  # the_set always has 1 item
-                  verbose=False,
-                  debug=False):
+                  verbose: bool,
+                  debug: bool,):
 
     assert max_wait_time > 0.01
     assert min_pool_size >= 2
@@ -110,7 +118,10 @@ def append_to_set(*,
 
         if time_loops > 1:
             msg = "\nWarning: min_pool_size: {} was not reached in max_wait_time: {}s so actual wait time was: {}x {}s\n"
-            msg = msg.format(min_pool_size, max_wait_time, time_loops, max_wait_time * time_loops)
+            msg = msg.format(min_pool_size,
+                             max_wait_time,
+                             time_loops,
+                             max_wait_time * time_loops,)
             eprint(msg)
 
         if len(the_set) < min_pool_size:
@@ -172,21 +183,31 @@ def randomize_iterator(iterator,
         yield next_item
 
 
-def iterate_input(iterator=None,
-                  null=False,
-                  disable_stdin=False,
-                  dont_decode=False,
-                  head=False,
-                  tail=False,
-                  skip=False,
-                  random=False,
-                  loop=False,
-                  verbose=False,
-                  debug=False,):
+def iterate_input(iterator,
+                  null: bool,
+                  disable_stdin: bool,
+                  dont_decode: bool,
+                  head: bool,
+                  tail: bool,
+                  skip: bool,
+                  random: bool,
+                  loop: bool,
+                  verbose: bool,
+                  debug: bool,):
 
     byte = b'\n'
     if null:
         byte = b'\x00'
+
+    if skip:
+        if (skip <= 0) or (skip is True) or (skip is None):
+            raise ValueError('skip must be False or a positive integer, not:', skip)
+    if head:
+        if (head <= 0) or (head is True) or (head is None):
+            raise ValueError('head must be False or a positive integer, not:', head)
+    if tail:
+        if (tail <= 0) or (tail is True) or (tail is None):
+            raise ValueError('tail must be False or a positive integer, not:', tail)
 
     assert skip is not None
     assert head is not None
@@ -270,11 +291,14 @@ def enumerate_input(*,
                     skip,
                     head,
                     tail,
-                    null=False,
-                    disable_stdin=False,
-                    verbose=False,
-                    debug=False,
-                    progress=False,):
+                    verbose: bool,
+                    debug: bool,
+                    null: bool = False,
+                    loop: bool = False,
+                    disable_stdin: bool = False,
+                    random: bool = False,
+                    dont_decode: bool = False,
+                    progress: bool = False,):
 
     if progress and (verbose or debug):
         raise ValueError('--progress and --verbose/--debug are mutually exclusive')
@@ -285,6 +309,9 @@ def enumerate_input(*,
                                    head=head,
                                    tail=tail,
                                    skip=skip,
+                                   dont_decode=dont_decode,
+                                   loop=loop,
+                                   random=random,
                                    debug=debug,
                                    verbose=verbose,)
     if debug:
