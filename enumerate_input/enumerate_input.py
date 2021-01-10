@@ -200,11 +200,17 @@ def iterate_input(iterator,
         byte = b'\x00'
 
     if skip in [0, True, None] or (skip <= 0):
-        raise ValueError('skip must be False or a positive integer, not:', skip)
+        #ic('BUG', skip)
+        skip = False
+        #raise ValueError('skip must be False or a positive integer, not:', skip)
     if head in [0, True, None] or (head <= 0):
-        raise ValueError('head must be False or a positive integer, not:', head)
+        #ic('BUG', head)
+        head = False
+        #raise ValueError('head must be False or a positive integer, not:', head)
     if tail in [0, True, None] or (tail <= 0):
-        raise ValueError('tail must be False or a positive integer, not:', tail)
+        #ic('BUG', tail)
+        tail - False
+        #raise ValueError('tail must be False or a positive integer, not:', tail)
 
     assert skip is not None
     assert head is not None
