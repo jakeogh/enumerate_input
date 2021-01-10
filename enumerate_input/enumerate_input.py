@@ -201,12 +201,10 @@ def iterate_input(iterator,
 
     if skip in [0, True, None] or (skip <= 0):
         raise ValueError('skip must be False or a positive integer, not:', skip)
-    if head:
-        if (head <= 0) or (head is True) or (head is None):
-            raise ValueError('head must be False or a positive integer, not:', head)
-    if tail:
-        if (tail <= 0) or (tail is True) or (tail is None):
-            raise ValueError('tail must be False or a positive integer, not:', tail)
+    if head in [0, True, None] or (head <= 0):
+        raise ValueError('head must be False or a positive integer, not:', head)
+    if tail in [0, True, None] or (tail <= 0):
+        raise ValueError('tail must be False or a positive integer, not:', tail)
 
     assert skip is not None
     assert head is not None
