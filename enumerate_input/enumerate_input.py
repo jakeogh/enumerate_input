@@ -239,6 +239,8 @@ def iterate_input(iterator,
                                 debug=debug,)
 
     if random:
+        if verbose:
+            ic(random)
         iterator = randomize_iterator(iterator,
                                       min_pool_size=1,
                                       max_wait_time=1,
@@ -247,6 +249,8 @@ def iterate_input(iterator,
             ic(iterator)
 
     if skip:
+        if verbose:
+            ic(skip)
         iterator = skipgen(iterator=iterator,
                            count=skip,
                            verbose=verbose,
@@ -255,6 +259,8 @@ def iterate_input(iterator,
             ic(iterator)
 
     if head:
+        if verbose:
+            ic(head)
         iterator = headgen(iterator=iterator,
                            count=head,
                            verbose=verbose,
