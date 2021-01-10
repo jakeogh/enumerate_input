@@ -199,21 +199,24 @@ def iterate_input(iterator,
     if null:
         byte = b'\x00'
 
-    #if skip in [0, True, None] or (skip <= 0):
-    if isinstance(skip, bool) or (skip <= 0):
-        #ic('BUG', skip)
-        skip = None
-        #raise ValueError('skip must be False or a positive integer, not:', skip)
-    #if head in [0, True, None] or (head <= 0):
-    if isinstance(head, bool) or (head <= 0):
-        #ic('BUG', head)
-        head = None
-        #raise ValueError('head must be False or a positive integer, not:', head)
-    #if tail in [0, True, None] or (tail <= 0):
-    if isinstance(tail, bool) or (tail <= 0):
-        #ic('BUG', tail)
-        tail = None
-        #raise ValueError('tail must be False or a positive integer, not:', tail)
+    if skip:
+        #if skip in [0, True, None] or (skip <= 0):
+        if isinstance(skip, bool) or (skip <= 0):
+            #ic('BUG', skip)
+            skip = None
+            #raise ValueError('skip must be False or a positive integer, not:', skip)
+    if head:
+        #if head in [0, True, None] or (head <= 0):
+        if isinstance(head, bool) or (head <= 0):
+            #ic('BUG', head)
+            head = None
+            #raise ValueError('head must be False or a positive integer, not:', head)
+    if tail:
+        #if tail in [0, True, None] or (tail <= 0):
+        if isinstance(tail, bool) or (tail <= 0):
+            #ic('BUG', tail)
+            tail = None
+            #raise ValueError('tail must be False or a positive integer, not:', tail)
 
     #assert skip is not None
     #assert head is not None
