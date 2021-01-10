@@ -199,9 +199,8 @@ def iterate_input(iterator,
     if null:
         byte = b'\x00'
 
-    if skip:
-        if (skip <= 0) or (skip is True) or (skip is None):
-            raise ValueError('skip must be False or a positive integer, not:', skip)
+    if skip in [0, True, None] or (skip <= 0):
+        raise ValueError('skip must be False or a positive integer, not:', skip)
     if head:
         if (head <= 0) or (head is True) or (head is None):
             raise ValueError('head must be False or a positive integer, not:', head)
