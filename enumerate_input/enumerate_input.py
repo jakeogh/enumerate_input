@@ -310,6 +310,8 @@ def enumerate_input(*,
 
     if progress and (verbose or debug):
         raise ValueError('--progress and --verbose/--debug are mutually exclusive')
+    if verbose:
+        ic(skip, head, tail, null, loop, disable_stdin, random, dont_decode, progress)
 
     inner_iterator = iterate_input(iterator=iterator,
                                    null=null,
