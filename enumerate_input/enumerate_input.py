@@ -295,7 +295,7 @@ def iterate_input(iterator,
         if debug:
             try:
                 ic(len(string))
-            except AttributeError:
+            except (TypeError, AttributeError):
                 pass    # need to be able to iterate over arb objects
 
         yield string
