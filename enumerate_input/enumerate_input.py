@@ -293,7 +293,10 @@ def iterate_input(iterator,
                 string = string.decode('utf8')
 
         if debug:
-            ic(len(string))
+            try:
+                ic(len(string))
+            except AttributeError:
+                pass    # need to be able to iterate over arb objects
 
         yield string
         lines_output += 1
