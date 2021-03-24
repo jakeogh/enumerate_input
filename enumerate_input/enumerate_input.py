@@ -94,7 +94,7 @@ def headgen(*,
         yield item
         if debug:
             ic(index + 1, count)
-        if (index + 1) > count:
+        if (index + 1) == count:
             return
 
 
