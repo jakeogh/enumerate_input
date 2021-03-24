@@ -64,7 +64,8 @@ def skipgen(*,
             iterator,
             count,
             verbose: bool,
-            debug: bool,):
+            debug: bool,
+            ):
     if verbose:
         ic(count)
     if debug:
@@ -81,7 +82,8 @@ def headgen(*,
             iterator,
             count,
             verbose: bool,
-            debug: bool,):
+            debug: bool,
+            ):
     if verbose:
         ic(count)
     if debug:
@@ -89,9 +91,11 @@ def headgen(*,
     for index, item in enumerate(iterator):
         if debug:
             ic(index, item)
+        yield item
+        if debug:
+            ic(index + 1, count)
         if (index + 1) > count:
             return
-        yield item
 
 
 def append_to_set(*,
@@ -100,7 +104,8 @@ def append_to_set(*,
                   max_wait_time,
                   min_pool_size,  # the_set always has 1 item
                   verbose: bool,
-                  debug: bool,):
+                  debug: bool,
+                  ):
 
     assert max_wait_time > 0.01
     assert min_pool_size >= 2
@@ -187,9 +192,9 @@ def iterate_input(iterator,
                   null: bool,
                   disable_stdin: bool,
                   dont_decode: bool,
-                  head: bool,
-                  tail: bool,
-                  skip: bool,
+                  head: int,
+                  tail: int,
+                  skip: int,
                   random: bool,
                   loop: bool,
                   verbose: bool,
