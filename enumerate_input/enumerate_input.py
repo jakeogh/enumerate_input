@@ -332,12 +332,17 @@ def enumerate_input(*,
                                    random=random,
                                    debug=debug,
                                    verbose=verbose,)
+    start_time = time.time()
     if debug:
         ic(inner_iterator)
 
     for index, thing in enumerate(inner_iterator):
         if progress:
-            print(index + 1, file=sys.stderr, end='\r')
+            items_total = index + 1
+            time_running = time.time() - start_time
+            items_per_second = int(items_total / time_running)
+            #print(index + 1, file=sys.stderr, end='\r')
+            print(items_total, items_per_second, file=sys.stderr, end='\r')
         yield index, thing
     if progress:
         print("", file=sys.stderr)
