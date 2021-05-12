@@ -61,6 +61,24 @@ def read_by_byte(file_object,
     # Decide what you want to do with leftover
 
 
+def filtergen(*,
+              iterator,
+              filter_function: object,
+              verbose: bool,
+              debug: bool,
+              ):
+    if verbose:
+        ic(filter_function)
+    if debug:
+        ic(iterator)
+    for item in iterator:
+        if debug:
+            ic(item)
+        if not filter_function(item):
+            continue
+        yield item
+
+
 def skipgen(*,
             iterator,
             count,
@@ -101,9 +119,9 @@ def headgen(*,
 
 def append_to_set(*,
                   iterator,
-                  the_set,
-                  max_wait_time,
-                  min_pool_size,  # the_set always has 1 item
+                  the_set: set,
+                  max_wait_time: float,
+                  min_pool_size: int,  # the_set always has 1 item
                   verbose: bool,
                   debug: bool,
                   ):
@@ -142,8 +160,8 @@ def append_to_set(*,
 # resulting in better mixing
 def randomize_iterator(iterator,
                        *,
-                       min_pool_size,
-                       max_wait_time,
+                       min_pool_size: int,
+                       max_wait_time: float,
                        buffer_set=None,
                        verbose=False,
                        debug=False,):
@@ -199,7 +217,9 @@ def iterate_input(iterator,
                   random: bool,
                   loop: bool,
                   verbose: bool,
-                  debug: bool,):
+                  debug: bool,
+                  input_filter_function: object,
+                  ):
 
     byte = b'\n'
     if null:
@@ -245,6 +265,16 @@ def iterate_input(iterator,
                                 byte=byte,
                                 verbose=verbose,
                                 debug=debug,)
+
+    if input_filter_function:
+        if verbose:
+            ic(random)
+        iterator = filtergen(iterator=iterator,
+                             filter_function=input_filter_function,
+                             verbose=verbose,
+                             debug=debug,)
+        if debug:
+            ic(iterator)
 
     if random:
         if verbose:
@@ -315,7 +345,9 @@ def enumerate_input(*,
                     disable_stdin: bool = False,
                     random: bool = False,
                     dont_decode: bool = False,
-                    progress: bool = False,):
+                    progress: bool = False,
+                    input_filter_function: object = None,
+                    ):
 
     if progress and (verbose or debug):
         raise ValueError('--progress and --verbose/--debug are mutually exclusive')
@@ -332,7 +364,8 @@ def enumerate_input(*,
                                    loop=loop,
                                    random=random,
                                    debug=debug,
-                                   verbose=verbose,)
+                                   verbose=verbose,
+                                   input_filter_function=input_filter_function,)
     start_time = time.time()
     if debug:
         ic(inner_iterator)
