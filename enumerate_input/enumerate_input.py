@@ -245,11 +245,11 @@ def iterate_input(iterator,
         if disable_stdin:
             raise ValueError('iterator is None and disable_stdin=True, nothing to read')
 
+    stdin_is_a_tty = sys.stdin.isatty()
     if disable_stdin:
         stdin_is_a_fifo = False
     else:
         stdin_is_a_fifo = S_ISFIFO(os.fstat(sys.stdin.fileno()).st_mode)
-        stdin_is_a_tty = sys.stdin.isatty()
         #stdin_given = select.select([sys.stdin,], [], [], 0.0)[0]
 
     if verbose:
