@@ -46,7 +46,8 @@ def read_by_byte(file_object,
         ic(byte)
     buf = b""
     #for chunk in iter(lambda: file_object.read(131072), b""):
-    for chunk in iter(lambda: file_object.read(8192), b""):
+    #for chunk in iter(lambda: file_object.read(8192), b""):
+    for chunk in iter(lambda: file_object.read(1024), b""):
         buf += chunk
         sep = buf.find(byte)
         if debug:
