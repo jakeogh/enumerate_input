@@ -322,7 +322,14 @@ def iterate_input(iterator,
 
         if not dont_decode:
             if isinstance(string, bytes):
-                string = string.decode('utf8')
+                try:
+                    string = string.decode('utf8')
+                except UnicodeDecodeError as e:
+                    if verbose:
+                        ic(e)
+                    ic(string)
+                    raise e
+
 
         if debug:
             try:
