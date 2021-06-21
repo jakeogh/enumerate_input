@@ -24,6 +24,7 @@ import sys
 import time
 from collections import deque
 from stat import S_ISFIFO
+from typing import Optional
 
 
 def eprint(*args, **kwargs):
@@ -212,9 +213,9 @@ def iterate_input(iterator,
                   null: bool,
                   disable_stdin: bool,
                   dont_decode: bool,
-                  head: int,
-                  tail: int,
-                  skip: int,
+                  head: Optional[int],
+                  tail: Optional[int],
+                  skip: Optional[int],
                   random: bool,
                   loop: bool,
                   verbose: bool,
@@ -343,9 +344,9 @@ def iterate_input(iterator,
 
 def enumerate_input(*,
                     iterator,
-                    skip,
-                    head,
-                    tail,
+                    skip: Optional[int],
+                    head: Optional[int],
+                    tail: Optional[int],
                     verbose: bool,
                     debug: bool,
                     null: bool = False,
@@ -354,7 +355,7 @@ def enumerate_input(*,
                     random: bool = False,
                     dont_decode: bool = False,
                     progress: bool = False,
-                    input_filter_function: object = None,
+                    input_filter_function: Optional[object] = None,
                     ):
 
     if progress and (verbose or debug):
