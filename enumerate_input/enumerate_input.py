@@ -26,23 +26,17 @@ from collections import deque
 from stat import S_ISFIFO
 from typing import Optional
 
-
-def eprint(*args, **kwargs):
-    if 'file' in kwargs.keys():
-        kwargs.pop('file')
-    print(*args, file=sys.stderr, **kwargs)
+from asserttool import eprint
+from asserttool import ic
+from asserttool import increment_debug
 
 
-try:
-    from icecream import ic  # https://github.com/gruns/icecream
-except ImportError:
-    ic = eprint
-
-
+@increment_debug
 def read_by_byte(file_object,
                  byte,
                  verbose: bool,
-                 debug: bool,):    # orig by ikanobori
+                 debug: bool,
+                 ) -> bytes:    # orig by ikanobori
     if verbose:
         ic(byte)
     buf = b""
@@ -63,6 +57,7 @@ def read_by_byte(file_object,
     # Decide what you want to do with leftover
 
 
+@increment_debug
 def filtergen(*,
               iterator,
               filter_function: object,
@@ -81,6 +76,7 @@ def filtergen(*,
         yield item
 
 
+@increment_debug
 def skipgen(*,
             iterator,
             count,
@@ -99,6 +95,7 @@ def skipgen(*,
         yield item
 
 
+@increment_debug
 def headgen(*,
             iterator,
             count,
@@ -119,6 +116,7 @@ def headgen(*,
             return
 
 
+@increment_debug
 def append_to_set(*,
                   iterator,
                   the_set: set,
@@ -160,13 +158,15 @@ def append_to_set(*,
 # add time-like memory limit
 # the longer the max_wait, the larger buffer_set will be,
 # resulting in better mixing
+@increment_debug
 def randomize_iterator(iterator,
                        *,
                        min_pool_size: int,
                        max_wait_time: float,
                        buffer_set=None,
-                       verbose=False,
-                       debug=False,):
+                       verbose: bool = False,
+                       debug: bool = False,
+                       ):
 
     assert max_wait_time
     assert min_pool_size
@@ -209,6 +209,7 @@ def randomize_iterator(iterator,
         yield next_item
 
 
+@increment_debug
 def iterate_input(iterator,
                   null: bool,
                   disable_stdin: bool,
@@ -342,6 +343,7 @@ def iterate_input(iterator,
         lines_output += 1
 
 
+@increment_debug
 def enumerate_input(*,
                     iterator,
                     skip: Optional[int],
