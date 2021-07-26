@@ -25,6 +25,7 @@ import time
 from collections import deque
 from stat import S_ISFIFO
 from typing import Optional
+from typing import Union
 
 from asserttool import eprint
 from asserttool import ic
@@ -34,8 +35,8 @@ from asserttool import increment_debug
 @increment_debug
 def read_by_byte(file_object,
                  byte,
-                 verbose: bool,
-                 debug: bool,
+                 verbose: Union[bool, int],
+                 debug: Union[bool, int],
                  ) -> bytes:    # orig by ikanobori
     if verbose:
         ic(byte)
