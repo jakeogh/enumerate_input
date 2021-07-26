@@ -48,7 +48,7 @@ def read_by_byte(file_object,
             ic(chunk)
         buf += chunk
         sep = buf.find(byte)
-        if debug:
+        if verbose > 2:
             ic(buf, sep)
 
         while sep != -1:
