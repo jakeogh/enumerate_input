@@ -55,7 +55,7 @@ def read_by_byte(file_object,
             ret, buf = buf[:sep], buf[sep + 1:]
             yield ret
             sep = buf.find(byte)
-    if debug:
+    if verbose > 2:
         ic('fell off end:', ret, buf)
     # Decide what you want to do with leftover
 
