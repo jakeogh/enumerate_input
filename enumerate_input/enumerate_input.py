@@ -59,7 +59,8 @@ def read_by_byte(file_object,
 
     if verbose > 2:
         ic('fell off end:', ret, buf)
-    # Decide what you want to do with leftover
+    if buf:
+        yield buf
 
 
 @increment_debug
