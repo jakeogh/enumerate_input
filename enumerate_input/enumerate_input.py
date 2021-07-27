@@ -19,7 +19,6 @@
 
 import os
 import secrets
-#import select
 import sys
 import time
 from collections import deque
