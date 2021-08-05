@@ -36,13 +36,14 @@ def read_by_byte(file_object,
                  byte,
                  verbose: Union[bool, int],
                  debug: Union[bool, int],
+                 buffer_size: int = 1024,
                  ) -> bytes:    # orig by ikanobori
     if verbose:
         ic(byte)
     buf = b""
     #for chunk in iter(lambda: file_object.read(131072), b""):
     #for chunk in iter(lambda: file_object.read(8192), b""):
-    for chunk in iter(lambda: file_object.read(1024), b""):
+    for chunk in iter(lambda: file_object.read(buffer_size), b""):
         if verbose > 2:
             ic(chunk)
         buf += chunk
@@ -226,6 +227,7 @@ def iterate_input(iterator,
                   loop: bool,
                   verbose: bool,
                   debug: bool,
+                  buffer_size: int,
                   input_filter_function: object,
                   ):
 
@@ -272,7 +274,9 @@ def iterate_input(iterator,
         iterator = read_by_byte(iterator,
                                 byte=byte,
                                 verbose=verbose,
-                                debug=debug,)
+                                debug=debug,
+                                buffer_size=buffer_size,
+                                )
 
     if input_filter_function:
         if verbose:
@@ -354,6 +358,7 @@ def enumerate_input(*,
                     skip: Optional[int],
                     head: Optional[int],
                     tail: Optional[int],
+                    buffer_size: Optional[int] = 1024,
                     verbose: bool,
                     debug: bool,
                     null: bool = False,
@@ -373,6 +378,7 @@ def enumerate_input(*,
     inner_iterator = iterate_input(iterator=iterator,
                                    null=null,
                                    disable_stdin=disable_stdin,
+                                   buffer_size=buffer_size,
                                    head=head,
                                    tail=tail,
                                    skip=skip,
