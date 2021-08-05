@@ -227,8 +227,8 @@ def iterate_input(iterator,
                   loop: bool,
                   verbose: bool,
                   debug: bool,
-                  buffer_size: int,
                   input_filter_function: object,
+                  buffer_size: int = 128,
                   ):
 
     byte = b'\n'
