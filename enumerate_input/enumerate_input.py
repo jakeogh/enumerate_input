@@ -358,7 +358,7 @@ def enumerate_input(*,
                     buffer_size: Optional[int] = 1024,
                     verbose: bool,
                     debug: bool,
-                    null: bool = False,
+                    newline_record_sep: bool = False,
                     loop: bool = False,
                     disable_stdin: bool = False,
                     random: bool = False,
@@ -370,6 +370,7 @@ def enumerate_input(*,
                     input_filter_function: Optional[object] = None,
                     ):
 
+    null = not newline_record_sep
     if progress and (verbose or debug):
         raise ValueError('--progress and --verbose/--debug are mutually exclusive')
     if verbose:
