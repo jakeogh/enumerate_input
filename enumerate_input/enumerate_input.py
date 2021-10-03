@@ -394,6 +394,9 @@ def enumerate_input(*,
         ic(inner_iterator)
 
     for index, thing in enumerate(inner_iterator):
+        if len(thing) == 0:
+            continue
+
         if progress:
             if index % 100 == 0:
                 items_total = index + 1
