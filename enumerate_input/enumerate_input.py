@@ -394,8 +394,12 @@ def enumerate_input(*,
         ic(inner_iterator)
 
     for index, thing in enumerate(inner_iterator):
-        if len(thing) == 0:
-            continue
+        try:
+            if len(thing) == 0:
+                continue
+        except TypeError as e:  # iterating over objects
+            if verbose:
+                ic(e)
 
         if progress:
             if index % 100 == 0:
