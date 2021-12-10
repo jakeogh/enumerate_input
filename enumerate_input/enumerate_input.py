@@ -235,6 +235,8 @@ def iterate_input(iterator,
     if null:
         byte = b'\x00'
 
+    ic(byte)
+
     if skip:
         if isinstance(skip, bool) or (skip <= 0):
             #ic('BUG', skip)
