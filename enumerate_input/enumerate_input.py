@@ -22,6 +22,7 @@ import secrets
 import sys
 import time
 from collections import deque
+from math import inf
 from stat import S_ISFIFO
 from typing import Optional
 from typing import Union
@@ -35,7 +36,6 @@ from asserttool import increment_debug
 def read_by_byte(file_object,
                  byte,
                  verbose: Union[bool, int],
-                 debug: Union[bool, int],
                  buffer_size: int = 1024,
                  ) -> bytes:    # orig by ikanobori
     if verbose:
@@ -68,14 +68,13 @@ def filtergen(*,
               iterator,
               filter_function: object,
               verbose: bool,
-              debug: bool,
               ):
     if verbose:
         ic(filter_function)
-    if debug:
+    if verbose == inf:
         ic(iterator)
     for item in iterator:
-        if debug:
+        if verbose == inf:
             ic(item)
         if not filter_function(item):
             continue
@@ -87,14 +86,13 @@ def skipgen(*,
             iterator,
             count,
             verbose: bool,
-            debug: bool,
             ):
     if verbose:
         ic(count)
-    if debug:
+    if verbose == inf:
         ic(iterator)
     for index, item in enumerate(iterator):
-        if debug:
+        if verbose == inf:
             ic(index, item)
         if (index + 1) <= count:
             continue
@@ -106,17 +104,16 @@ def headgen(*,
             iterator,
             count,
             verbose: bool,
-            debug: bool,
             ):
     if verbose:
         ic(count)
-    if debug:
+    if verbose == inf:
         ic(iterator)
     for index, item in enumerate(iterator):
-        if debug:
+        if verbose == inf:
             ic(index, item)
         yield item
-        if debug:
+        if verbose == inf:
             ic(index + 1, count)
         if (index + 1) == count:
             return
@@ -129,7 +126,6 @@ def append_to_set(*,
                   max_wait_time: float,
                   min_pool_size: int,  # the_set always has 1 item
                   verbose: bool,
-                  debug: bool,
                   ):
 
     assert max_wait_time > 0.01
@@ -171,7 +167,6 @@ def randomize_iterator(iterator,
                        max_wait_time: float,
                        buffer_set=None,
                        verbose: bool = False,
-                       debug: bool = False,
                        ):
 
     assert max_wait_time
@@ -192,7 +187,7 @@ def randomize_iterator(iterator,
                                min_pool_size=min_pool_size,
                                max_wait_time=max_wait_time,
                                verbose=verbose,
-                               debug=debug)
+                               )
 
     while buffer_set:
         try:
@@ -205,9 +200,9 @@ def randomize_iterator(iterator,
         random_index = secrets.randbelow(buffer_set_length)
         next_item = list(buffer_set).pop(random_index)
         buffer_set.remove(next_item)
-        if debug:
+        if verbose == inf:
             eprint("Chose 1 item out of", buffer_set_length)
-        if debug:
+        if verbose == inf:
             eprint("len(buffer_set):", buffer_set_length - 1)
         if verbose:
             ic(len(buffer_set), random_index, next_item)
@@ -226,7 +221,6 @@ def iterate_input(iterator,
                   random: bool,
                   loop: bool,
                   verbose: bool,
-                  debug: bool,
                   input_filter_function: object,
                   buffer_size: int = 128,
                   ):
@@ -274,7 +268,6 @@ def iterate_input(iterator,
         iterator = read_by_byte(iterator,
                                 byte=byte,
                                 verbose=verbose,
-                                debug=debug,
                                 buffer_size=buffer_size,
                                 )
 
@@ -284,8 +277,8 @@ def iterate_input(iterator,
         iterator = filtergen(iterator=iterator,
                              filter_function=input_filter_function,
                              verbose=verbose,
-                             debug=debug,)
-        if debug:
+                             )
+        if verbose == inf:
             ic(iterator)
 
     if random:
@@ -295,7 +288,7 @@ def iterate_input(iterator,
                                       min_pool_size=1,
                                       max_wait_time=1,
                                       verbose=verbose,)
-        if debug:
+        if verbose == inf:
             ic(iterator)
 
     if skip:
@@ -304,8 +297,8 @@ def iterate_input(iterator,
         iterator = skipgen(iterator=iterator,
                            count=skip,
                            verbose=verbose,
-                           debug=debug,)
-        if debug:
+                           )
+        if verbose == inf:
             ic(iterator)
 
     if head:
@@ -314,8 +307,8 @@ def iterate_input(iterator,
         iterator = headgen(iterator=iterator,
                            count=head,
                            verbose=verbose,
-                           debug=debug,)
-        if debug:
+                           )
+        if verbose == inf:
             ic(iterator)
 
     if tail:  # this seems like the right order, can access any "tail"
@@ -323,12 +316,12 @@ def iterate_input(iterator,
             ic(tail)
         iterator = deque(iterator,
                          maxlen=tail,)
-        if debug:
+        if verbose == inf:
             ic(iterator)
 
     lines_output = 0
     for index, string in enumerate(iterator):
-        if debug:
+        if verbose == inf:
             ic(index, string)
 
         if not dont_decode:
@@ -342,7 +335,7 @@ def iterate_input(iterator,
                     raise e
 
 
-        if debug:
+        if verbose == inf:
             try:
                 ic(len(string))
             except (TypeError, AttributeError):
@@ -357,7 +350,6 @@ def enumerate_input(*,
                     iterator,
                     buffer_size: Optional[int] = 1024,
                     verbose: bool,
-                    debug: bool,
                     newline_record_sep: bool = False,
                     loop: bool = False,
                     disable_stdin: bool = False,
@@ -371,8 +363,8 @@ def enumerate_input(*,
                     ):
 
     null = not newline_record_sep
-    if progress and (verbose or debug):
-        raise ValueError('--progress and --verbose/--debug are mutually exclusive')
+    if progress and verbose:
+        raise ValueError('--progress and --verbose are mutually exclusive')
     if verbose:
         ic(skip, head, tail, null, loop, disable_stdin, random, dont_decode, progress)
 
@@ -386,11 +378,10 @@ def enumerate_input(*,
                                    dont_decode=dont_decode,
                                    loop=loop,
                                    random=random,
-                                   debug=debug,
                                    verbose=verbose,
                                    input_filter_function=input_filter_function,)
     start_time = time.time()
-    if debug:
+    if verbose == inf:
         ic(inner_iterator)
 
     for index, thing in enumerate(inner_iterator):
