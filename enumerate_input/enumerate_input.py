@@ -24,7 +24,7 @@ import time
 from collections import deque
 from math import inf
 from stat import S_ISFIFO
-from typing import Generator
+from typing import Iterator
 from typing import Optional
 from typing import Union
 
@@ -38,7 +38,7 @@ def read_by_byte(file_object,
                  byte,
                  verbose: Union[bool, int],
                  buffer_size: int = 1024,
-                 ) -> Generator[bytes]:    # orig by ikanobori
+                 ) -> Iterator[bytes]:    # orig by ikanobori
     if verbose:
         ic(byte)
     buf = b""
