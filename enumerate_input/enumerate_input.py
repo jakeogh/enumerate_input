@@ -31,37 +31,37 @@ from typing import Union
 from asserttool import eprint
 from asserttool import ic
 from asserttool import increment_debug
+from bytestool import read_by_byte
 
-
-@increment_debug
-def read_by_byte(file_object,
-                 byte,
-                 verbose: Union[bool, int],
-                 buffer_size: int = 1024,
-                 ) -> Iterator[bytes]:    # orig by ikanobori
-    if verbose:
-        ic(byte)
-    buf = b""
-    #for chunk in iter(lambda: file_object.read(131072), b""):
-    #for chunk in iter(lambda: file_object.read(8192), b""):
-    for chunk in iter(lambda: file_object.read(buffer_size), b""):
-        if verbose > 2:
-            ic(chunk)
-        buf += chunk
-        sep = buf.find(byte)
-        if verbose > 2:
-            ic(buf, sep)
-
-        ret = None
-        while sep != -1:
-            ret, buf = buf[:sep], buf[sep + 1:]
-            yield ret
-            sep = buf.find(byte)
-
-    if verbose > 2:
-        ic('fell off end:', ret, buf)
-    if buf:
-        yield buf
+#@increment_debug
+#def read_by_byte(file_object,
+#                 byte: bytes,
+#                 verbose: Union[bool, int],
+#                 buffer_size: int = 1024,
+#                 ) -> Iterator[bytes]:    # orig by ikanobori
+#    if verbose:
+#        ic(byte)
+#    buf = b""
+#    #for chunk in iter(lambda: file_object.read(131072), b""):
+#    #for chunk in iter(lambda: file_object.read(8192), b""):
+#    for chunk in iter(lambda: file_object.read(buffer_size), b""):
+#        if verbose > 2:
+#            ic(chunk)
+#        buf += chunk
+#        sep = buf.find(byte)
+#        if verbose > 2:
+#            ic(buf, sep)
+#
+#        ret = None
+#        while sep != -1:
+#            ret, buf = buf[:sep], buf[sep + 1:]
+#            yield ret
+#            sep = buf.find(byte)
+#
+#    if verbose > 2:
+#        ic('fell off end:', ret, buf)
+#    if buf:
+#        yield buf
 
 
 @increment_debug
