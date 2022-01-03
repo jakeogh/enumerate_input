@@ -20,44 +20,39 @@
 
 import sys
 from math import inf
+from typing import Optional
 
 import click
+from clicktool import click_add_options
+from clicktool import click_global_options
 from icecream import ic
 
-from enumerate_input import enumerate_input
+from enumerate_input import _enumerate_input
 
 
 @click.command()
 @click.argument("args", type=str, nargs=-1)
-@click.option('--verbose', is_flag=True)
-@click.option('--debug', is_flag=True)
-@click.option('--simulate', is_flag=True)
 @click.option('--count', type=float, default=inf)
-@click.option("--printn", is_flag=True)
-def cli(args,
-        verbose,
-        debug,
-        simulate,
-        count,
-        printn,):
-
-    null = not printn
+@click_add_options(click_global_options)
+@click.pass_context
+def cli(ctx,
+        args: Optional[tuple[str]],
+        verbose: int,
+        verbose_inf: bool,
+        count: bool,
+        ):
 
     if verbose:
         ic(sys.stdout.isatty())
 
-    for index, arg in enumerate_input(iterator=args,
-                                      null=null,
-                                      debug=debug,
-                                      verbose=verbose):
-        if verbose or simulate:
+    for index, arg in _enumerate_input(iterator=args,
+                                       verbose=verbose,
+                                       ):
+        if verbose:
             ic(index, arg)
         if count:
             if count > (index + 1):
                 ic(count)
                 sys.exit(0)
-
-        if simulate:
-            continue
 
         ic(arg)
