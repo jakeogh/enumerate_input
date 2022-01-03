@@ -347,7 +347,7 @@ def iterate_input(iterator,
 
 
 @increment_debug
-def enumerate_input(*,
+def _enumerate_input(*,
                     iterator,
                     buffer_size: Optional[int] = 1024,
                     verbose: bool,
