@@ -28,17 +28,17 @@ from typing import Iterator
 from typing import Optional
 from typing import Union
 
-from asserttool import eprint
 from asserttool import ic
 from asserttool import increment_debug
 from bytestool import read_by_byte
+from eprint import eprint
 
 
 @increment_debug
 def filtergen(*,
               iterator,
               filter_function: object,
-              verbose: bool,
+              verbose: Union[bool, int, float],
               ):
     if verbose:
         ic(filter_function)
@@ -56,7 +56,7 @@ def filtergen(*,
 def skipgen(*,
             iterator,
             count,
-            verbose: bool,
+            verbose: Union[bool, int, float],
             ):
     if verbose:
         ic(count)
@@ -74,7 +74,7 @@ def skipgen(*,
 def headgen(*,
             iterator,
             count,
-            verbose: bool,
+            verbose: Union[bool, int, float],
             ):
     if verbose:
         ic(count)
@@ -96,7 +96,7 @@ def append_to_set(*,
                   the_set: set,
                   max_wait_time: float,
                   min_pool_size: int,  # the_set always has 1 item
-                  verbose: bool,
+                  verbose: Union[bool, int, float],
                   ):
 
     assert max_wait_time > 0.01
@@ -137,7 +137,7 @@ def randomize_iterator(iterator,
                        min_pool_size: int,
                        max_wait_time: float,
                        buffer_set=None,
-                       verbose: bool = False,
+                       verbose: Union[bool, int, float],
                        ):
 
     assert max_wait_time
@@ -191,7 +191,7 @@ def iterate_input(iterator,
                   skip: Optional[int],
                   random: bool,
                   loop: bool,
-                  verbose: bool,
+                  verbose: Union[bool, int, float],
                   input_filter_function: object,
                   buffer_size: int = 128,
                   ):
@@ -320,7 +320,7 @@ def iterate_input(iterator,
 def _enumerate_input(*,
                     iterator,
                     buffer_size: Optional[int] = 1024,
-                    verbose: bool,
+                    verbose: Union[bool, int, float],
                     newline_record_sep: bool = False,
                     loop: bool = False,
                     disable_stdin: bool = False,

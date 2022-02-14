@@ -37,7 +37,7 @@ from enumerate_input import _enumerate_input
 @click.pass_context
 def cli(ctx,
         args: Optional[tuple[str]],
-        verbose: int,
+        verbose: Union[bool, int, float],
         verbose_inf: bool,
         count: bool,
         ):
